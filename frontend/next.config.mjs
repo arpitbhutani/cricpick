@@ -5,10 +5,15 @@ const nextConfig = {
   // you might want to set up rewrites here to avoid CORS issues.
   // Example:
   async rewrites() {
+    const backendApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
     return [
       {
         source: '/api/:path*',
-        destination: 'http://127.0.0.1:8000/api/:path*', // Your FastAPI backend
+        // Ensure the destination ends with /api/:path* if your backend URL already includes /api
+        // If NEXT_PUBLIC_API_URL is https://cricpick.onrender.com, then destination should be https://cricpick.onrender.com/api/:path*
+        // If NEXT_PUBLIC_API_URL is https://cricpick.onrender.com/api, then destination should be https://cricpick.onrender.com/:path*
+        // Assuming NEXT_PUBLIC_API_URL will be set to the base (e.g. https://cricpick.onrender.com) and /api is part of the path.
+        destination: `${backendApiUrl}/api/:path*`,
       },
     ]
   },
