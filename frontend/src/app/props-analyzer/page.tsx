@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation'; // Import useSearchParams
 import { Eye, EyeOff, Filter, Loader2, TrendingUp, Zap, BarChart3, Search, Globe, Building, ChevronDown, ChevronUp, ChevronsUpDown, Crosshair } from 'lucide-react'; // Import Eye, EyeOff, Filter, Loader2, TrendingUp, Zap, BarChart3, Search, Globe, Building icons
 
@@ -113,7 +114,7 @@ interface PlayerStats { // Consolidated PlayerStats type
   boundary_type?: '4s' | '6s'; // Optional: to help distinguish if needed, though PlayerStats is generic
 }
 
-const PropsAnalyzerPage: React.FC = () => {
+const PropsAnalyzerContent: React.FC = () => {
   const searchParams = useSearchParams(); // Hook to get URL search params
   const [allTournaments, setAllTournaments] = useState<Tournament[]>([]); // Stores all fetched tournaments
   const [tournaments, setTournaments] = useState<Tournament[]>([]); // Filtered tournaments for display
@@ -726,4 +727,14 @@ const PropsAnalyzerPage: React.FC = () => {
   );
 };
 
-export default PropsAnalyzerPage; 
+// New default export for the page that wraps the content
+const PropsAnalyzerPageWithSuspense: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading page content...</div>}> {/* Or a more sophisticated Skeleton loader */}
+      <PropsAnalyzerContent />
+    </Suspense>
+  );
+};
+
+// Default export for Vercel to pick up
+export default PropsAnalyzerPageWithSuspense; 
